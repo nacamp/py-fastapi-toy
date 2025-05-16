@@ -1,26 +1,35 @@
 from utils.jwt import create_access_token, create_refresh_token, decode_token
 from schemas.auth import LoginDto, TokenResponse
 import bcrypt
-
-# 더미 유저 DB
-fake_user = {
-    "id": "user123",
-    "email": "test@example.com",
-    "password": bcrypt.hashpw("password".encode(), bcrypt.gensalt()).decode()
-}
-
+from services.users_service import UsersService
 
 class AuthService:
-    def login(self, dto: LoginDto) -> TokenResponse:
-        # if dto.email != fake_user["email"]:
-        #     raise Exception("User not found")
-        # if not bcrypt.checkpw(dto.password.encode(), fake_user["password"].encode()):
-        #     raise Exception("Invalid password")
+    def __init__(self, users_service: UsersService):
+        self.users_service = users_service
+        # 메모리 저장 (user_id → refresh_token)
+        self.refresh_tokens: dict[str, str] = {}
 
-        access = create_access_token(fake_user["id"])
-        refresh = create_refresh_token(fake_user["id"])
-        return {"data": TokenResponse(access_token=access, refresh_token=refresh)}
-        # return TokenResponse(access_token=access, refresh_token=refresh)
+    async def login(self, dto: LoginDto) -> TokenResponse:
+        email, password = dto.email, dto.password
+
+        # 유저 조회
+        user = self.users_service.find_user_by_email(email)
+        if not user:
+            return {"message": "User not found"}
+
+        # 비밀번호 검증
+        if not bcrypt.checkpw(password.encode(), user.password.encode()):
+            return {"message": "Invalid credentials"}
+
+        # JWT payload
+        payload = {"email": user.email, "sub": user.id}
+
+        # 토큰 발급
+        access_token = create_access_token(payload)
+        refresh_token = create_refresh_token(payload)
+        self.refresh_tokens[user.id] = refresh_token
+        
+        return {"data": TokenResponse(access_token=access_token, refresh_token=refresh_token)}
 
     def refresh(self, user_id: str, refresh_token: str) -> TokenResponse:
         decoded = decode_token(refresh_token)
