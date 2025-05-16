@@ -1,0 +1,54 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# VSCode settings
+.vscode/
+
+# Python virtual environment
+venv/
+.env/
+.env.*        # For dotenv files like .env.local
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+
+# PyInstaller
+*.spec
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+
+# MyPy
+.mypy_cache/
+
+# Pyre
+.pyre/
+
+# Pytest
+.cache/
+.coverage
+htmlcov/
+.tox/
+
+# Logs
+*.log
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Uvicorn reload temp files (optional)
+**/__pycache__/
+*.pid
+
+# IDE-specific
+.idea/
+*.swp
+
+# SQLite / local DB
+*.sqlite3
+*.db
