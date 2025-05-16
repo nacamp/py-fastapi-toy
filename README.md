@@ -5,6 +5,11 @@ https://fastapi.tiangolo.com/advanced/events/
 - di
 https://fastapi.tiangolo.com/tutorial/dependencies/#declare-the-dependency-in-the-dependant
 
+## install pyjwt
+```
+poetry add pyjwt
+```
+
 ## install sqlmodel
 ```bash
 poetry add sqlmodel
