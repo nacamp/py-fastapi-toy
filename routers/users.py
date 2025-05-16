@@ -4,20 +4,16 @@ from services.users_service import UsersService
 from schemas.user import CreateUserDto, UpdateUserDto, ChangePasswordDto
 from sqlmodel import Session
 from typing import Annotated
+from deps.auth import get_current_user
 
-
-router = APIRouter(prefix="/users", tags=["users"])
+router = APIRouter(
+    prefix="/users", tags=["users"], dependencies=[Depends(get_current_user)])
 
 CONFIG = {"dbHost": "localhost", "dbPort": 5432}  # 임시 config
 
 
 def get_service(session: Session = Depends(get_session)):
     return UsersService(session, CONFIG)
-
-
-@router.post("/")
-def create_user(dto: CreateUserDto, service: UsersService = Depends(get_service)):
-    return service.create(dto)
 
 
 @router.get("/")

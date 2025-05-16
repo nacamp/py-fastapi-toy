@@ -1,5 +1,10 @@
 
 ## case: developping
+
+- directory
+https://fastapi.tiangolo.com/tutorial/bigger-applications/
+- dependencies : router에서 path 접근전에 체크(jwt)
+https://fastapi.tiangolo.com/tutorial/dependencies/global-dependencies/#dependencies-for-groups-of-path-operations
 - Lifespan Events
 https://fastapi.tiangolo.com/advanced/events/
 - di
