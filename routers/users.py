@@ -1,31 +1,36 @@
-from fastapi import APIRouter, Body, Path, Request
+from fastapi import APIRouter, Depends
+from db.session import get_session
+from services.users_service import UsersService
+from schemas.user import CreateUserDto, UpdateUserDto, ChangePasswordDto
+from sqlmodel import Session
 
-router = APIRouter(
-    prefix="/users",
-    tags=["users"]
-)
+router = APIRouter(prefix="/users", tags=["users"])
+
+CONFIG = {"dbHost": "localhost", "dbPort": 5432}  # 임시 config
+
+def get_service(session: Session = Depends(get_session)):
+    return UsersService(session, CONFIG)
 
 @router.post("/")
-def create_user(create_user_dto: dict = Body(...)):
-    return {"message": "User created (dummy)", "data": create_user_dto}
+def create_user(dto: CreateUserDto, service: UsersService = Depends(get_service)):
+    return service.create(dto)
 
 @router.get("/")
-def find_all_users(request: Request):
-    # request.state.user 등에서 인증된 사용자 정보 접근 가능 (미구현 상태)
-    return {"message": "All users (dummy)"}
+def get_all(service: UsersService = Depends(get_service)):
+    return service.find_all()
 
 @router.get("/{id}")
-def find_one_user(id: str = Path(...)):
-    return {"message": "User detail (dummy)", "id": id}
+def get_user(id: int, service: UsersService = Depends(get_service)):
+    return service.find_one(id)
 
 @router.patch("/{id}")
-def update_user(id: str, update_user_dto: dict = Body(...)):
-    return {"message": "User updated (dummy)", "id": id, "data": update_user_dto}
+def update_user(id: int, dto: UpdateUserDto, service: UsersService = Depends(get_service)):
+    return service.update(id, dto)
 
 @router.delete("/{id}")
-def remove_user(id: str):
-    return {"message": "User deleted (dummy)", "id": id}
+def delete_user(id: int, service: UsersService = Depends(get_service)):
+    return service.remove(id)
 
 @router.patch("/{id}/password")
-def change_password(id: str, body: dict = Body(...)):
-    return {"message": "Password changed (dummy)", "id": id, "new_password": body.get("password")}
+def change_password(id: int, dto: ChangePasswordDto, service: UsersService = Depends(get_service)):
+    return service.change_password(id, dto.password)
