@@ -1,4 +1,10 @@
 
+## case: developping
+- Lifespan Events
+https://fastapi.tiangolo.com/advanced/events/
+- di
+https://fastapi.tiangolo.com/tutorial/dependencies/#declare-the-dependency-in-the-dependant
+
 ## install sqlmodel
 ```bash
 poetry add sqlmodel
