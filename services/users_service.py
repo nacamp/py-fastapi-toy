@@ -30,7 +30,7 @@ class UsersService:
         user = self.session.get(User, id)
         if not user:
             return None
-        for field, value in dto.dict(exclude_unset=True).items():
+        for field, value in dto.model_dump(exclude_unset=True).items():
             setattr(user, field, value)
         self.session.add(user)
         self.session.commit()

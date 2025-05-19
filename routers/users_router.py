@@ -10,13 +10,6 @@ from deps.users import get_users_service
 router = APIRouter(
     prefix="/users", tags=["users"], dependencies=[Depends(get_current_user)])
 
-# CONFIG = {"dbHost": "localhost", "dbPort": 5432}  # 임시 config
-
-
-# def get_service(session: Session = Depends(get_session)):
-#     return UsersService(session, CONFIG)
-
-
 @router.get("/")
 def get_all(service: UsersService = Depends(get_users_service)):
     return service.find_all()
@@ -28,8 +21,6 @@ def get_user(
     service: Annotated[UsersService, Depends(get_users_service)] = ...
 ):
     return service.find_one(id)
-    # def get_user(id: int, service: UsersService = Depends(get_service)):
-    #     return service.find_one(id)
 
 
 @router.patch("/{id}")

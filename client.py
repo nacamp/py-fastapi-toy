@@ -28,6 +28,7 @@ if 200 <= login_response.status_code < 300:
     access_token = r.get("data").get("access_token")
     refresh_token = r.get("data").get("refresh_token")
     user_id = r.get("data").get("id")
+    print(r.get('data'))
 
     # access_token = login_response.json().get("access_token")
     # refresh_token = login_response.json().get("refresh_token")
@@ -56,21 +57,33 @@ else:
     print("Failed to fetch users")
     print(users_response.text)
 
-# # 3. refresh token
-# print("Users  Response:")
-# headers = {
-#     "Authorization": f"Bearer {access_token}"
-# }
 
-# print(refresh_token)
-# print(user_id)
-# data = { "userId": user_id, "refreshToken": refresh_token }
-# refresh_response = requests.post(refresh_url, json=data, headers=headers)
-# # { userId: string; refreshToken: string }
-# if 200 <= refresh_response.status_code < 300:
-#     tokens = refresh_response.json()
-#     print("Tokens:")
-#     print(tokens)
-# else:
-#     print("Failed to fetch refresh token")
-#     print(refresh_response.text)
+# 2.1 토큰으로 /users/id API 호출
+print("Update  Response:")
+update_payload = {
+    "email": "test@example.com",
+    "name": "tester1"
+}
+login_response = requests.patch(users_url+'/1', json=update_payload, headers=headers)
+print(login_response.json())
+print(login_response.status_code)
+
+
+# 3. refresh token
+print("Users  Response:")
+headers = {
+    "Authorization": f"Bearer {access_token}"
+}
+
+print(refresh_token)
+print(user_id)
+data = { "userId": user_id, "refreshToken": refresh_token }
+refresh_response = requests.post(refresh_url, json=data, headers=headers)
+# { userId: string; refreshToken: string }
+if 200 <= refresh_response.status_code < 300:
+    tokens = refresh_response.json()
+    print("Tokens:")
+    print(tokens)
+else:
+    print("Failed to fetch refresh token")
+    print(refresh_response.text)

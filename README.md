@@ -21,12 +21,17 @@ poetry add sqlmodel
 poetry add bcrypt
 poetry add "pydantic[email]"
 ```
-
+## run
+```bash
+uvicorn main:app --reload
+or
+fastapi dev main.py
+```
 ## install fastapi
 ```bash
 mkdir py-fastapi-toy
 cd py-fastapi-toy
 poetry init
-poetry add fastapi
+poetry add "fastapi[standard]"
 poetry add "uvicorn[standard]"
 ```
